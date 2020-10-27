@@ -1,0 +1,50 @@
+﻿@model Library.Models.User
+
+@{
+    ViewData["Title"] = "My Todo's";
+}
+
+@if (Model == null)
+{
+    <p>Model is null.</p>
+}
+
+else
+{
+    <h1>My Todo's - @Model.UserName</h1>
+
+    <p>
+        <a asp-action="Create">Create new todo list</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.TodoLists)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TodoLists)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.TodoLists)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AllDone)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -1,0 +1,33 @@
+﻿@model LoginViewModel;
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h1>Login</h1>
+<hr />
+
+<a asp-action="CreateUser">Create user account</a>
+<br />
+<br />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Login">
+            <label asp-for="UserName" class="control-label">Enter user name: </label>
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+            <br />
+            <label asp-for="Password" class="control-label">Enter password: </label>
+            <input type="password" asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+            <br />
+            <input type="submit" class="btn btn-primary" value="Login" />
+        </form>
+    </div>
+</div>
+<p>Only one user can be logged in simultaneously - any other logged in user will automatically be logged out.</p>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
+
