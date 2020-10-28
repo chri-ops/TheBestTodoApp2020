@@ -6,4 +6,3 @@ C:\Users\lrkon\source\repos\TheBestTodoApp2020\Repo\bin\Debug\netcoreapp3.1\Libr
 C:\Users\lrkon\source\repos\TheBestTodoApp2020\Repo\obj\Debug\netcoreapp3.1\Library.csproj.CoreCompileInputs.cache
 C:\Users\lrkon\source\repos\TheBestTodoApp2020\Repo\obj\Debug\netcoreapp3.1\Library.dll
 C:\Users\lrkon\source\repos\TheBestTodoApp2020\Repo\obj\Debug\netcoreapp3.1\Library.pdb
-C:\Users\lrkon\source\repos\TheBestTodoApp2020\Repo\obj\Debug\netcoreapp3.1\Library.csprojAssemblyReference.cache

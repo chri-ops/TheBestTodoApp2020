@@ -1,0 +1,48 @@
+﻿@model TheBestTodoApp2020.Models.EditTodoListViewModel
+
+@{
+    ViewData["Title"] = "Check todo list";
+}
+
+<h1>Todo list</h1>
+<p><b>@Model.TodoListTitle</b></p>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditTodoList">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+
+                @foreach (var item in Model.listOfTodos)
+                {
+                <div style="float: left; margin-right: 10px;">
+                    @Html.DisplayFor(modelItem => item.Done)
+                </div>
+                    <a class="btn btn-primary" asp-action="CheckTodo" asp-route-todoId=@item.Id>Check!</a>
+                    @Html.DisplayFor(modelItem => item.Description)
+                    @*<p>Description: @item.Description</p>*@
+
+
+                    @*<p>To be done: @item.ToBeDone.</p><br />*@
+                    <br />
+                    @*<p style="float: left; margin-right: 10px;">Done </p>*@
+                    @*<p>Done: @item.Done</p>*@
+
+                    <hr />
+                }
+
+                @*<input type="submit" value="Save" class="btn btn-primary" />*@
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
+

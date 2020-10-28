@@ -1,0 +1,11 @@
+﻿@model TheBestTodoApp2020.Models.AddAnotherTodoViewModel
+
+@{
+    ViewData["Title"] = "Add another todo?";
+}
+
+<h1>Add another todo to this list?</h1>
+
+<a asp-action="CreateTodo" asp-route-todoListId=@Model.TodoListId class="btn btn-primary">Yes</a>
+<a asp-action="Index" class="btn btn-secondary">No</a>
+

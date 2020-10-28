@@ -9,6 +9,7 @@ using Library;
 using TheBestTodoApp2020.Models;
 using Library.Models;
 using Library;
+using MongoDB.Bson;
 
 namespace TheBestTodoApp2020.Controllers
 {
@@ -18,10 +19,21 @@ namespace TheBestTodoApp2020.Controllers
         public ActionResult Index()
         {
             DB db = new DB();
-
+            TodoIndexViewModel m = new TodoIndexViewModel();
             User user = db.FindLoggedInUser();
 
-            return View(user);
+            if (user == null)
+            {
+                return View("NoLoggedInUser");
+            }
+
+            else
+            {
+                m.User = user;
+                m.TodoLists = db.GetAllTodoListsForUser(m.User);
+
+                return View(m);
+            }
         }
 
         // GET: TodoController/Details/5
@@ -48,9 +60,9 @@ namespace TheBestTodoApp2020.Controllers
 
                 DB db = new DB();
 
-                db.AddTodoListToUser(todoList);
+                db.AddTodoList(todoList);
 
-                return RedirectToAction("Index", "Todo");
+                return RedirectToAction("CreateTodo", "Todo", new { todoListId = todoList.Id.ToString() });
             }
             catch
             {
@@ -58,20 +70,106 @@ namespace TheBestTodoApp2020.Controllers
             }
         }
 
-        // GET: TodoController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult CreateTodo(string todoListId)
         {
-            return View();
+            CreateTodoViewModel m = new CreateTodoViewModel();
+            // var id = ObjectId.Parse(todoListId);
+
+            // In user input form, DateTime.Now will be default/preset (for easier/more logical picking)
+            //DateTime now = DateTime.Now;
+            
+            // Trying to get rid of milliseconds part of datetime in View (by setting time to whole minutes (00))
+            //now = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 00, now.Kind);
+
+            //m.ToBeDone = now;
+
+            m.TodoListId = todoListId;
+
+            return View(m);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateTodo(CreateTodoViewModel m)
+        {
+            Todo todo = new Todo();
+
+            todo.Description = m.Description;
+            todo.Done = m.Done;
+            //todo.ToBeDone = m.ToBeDone;
+            todo.TodoListId = ObjectId.Parse(m.TodoListId);
+
+            DB db = new DB();
+
+            db.AddTodo(todo);
+
+            AddAnotherTodoViewModel a = new AddAnotherTodoViewModel();
+            a.TodoListId = m.TodoListId;
+
+            return View("AddAnotherTodo", a);
+        }
+
+
+
+        // GET: TodoController/Edit/5
+        public ActionResult EditTodoList(string todoListId)
+        {
+            EditTodoListViewModel m = new EditTodoListViewModel();
+
+            var id = ObjectId.Parse(todoListId);
+            m.TodoListId = id;
+            
+            DB db = new DB();
+
+            TodoList todoList = db.GetTodoListById(id);
+
+            m.TodoListTitle = todoList.Title;
+            m.listOfTodos = db.GetAllTodos(id);
+
+            return View(m);
+        }
+
+        public ActionResult CheckTodo(string todoId)
+        {
+            var id = ObjectId.Parse(todoId);
+
+            DB db = new DB();
+
+            Todo todo = db.GetTodoById(id);
+
+            CheckTodoViewModel m = new CheckTodoViewModel();
+
+            m.TodoId = todo.Id.ToString();
+            m.Description = todo.Description;
+            m.Done = todo.Done;
+
+            return View("CheckTodo", m);
         }
 
         // POST: TodoController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult CheckTodo(CheckTodoViewModel m)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                DB db = new DB();
+
+                var id = ObjectId.Parse(m.TodoId);
+
+                Todo todo = db.GetTodoById(id);
+
+                todo.Description = m.Description;
+                todo.Comment = m.Comment;
+                todo.Done = m.Done;
+
+                db.UpdateTodo(todo);
+
+                // Check if all todo's are done-marked: if so, AllDone should be marked on todoList
+                // But then.. If we keep the possibility to uncheck checked todo's, the list has
+                // to reflect that, again. Hmm....
+
+                return RedirectToAction("EditTodoList", new { todoListId = todo.TodoListId.ToString() });
             }
             catch
             {

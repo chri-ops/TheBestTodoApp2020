@@ -1,10 +1,10 @@
-﻿@model Library.Models.User
+﻿@model TheBestTodoApp2020.Models.TodoIndexViewModel
 
 @{
     ViewData["Title"] = "My Todo's";
 }
 
-@if (Model == null)
+@if (Model.User == null)
 {
     <p>No user is logged in. Please Login:</p>
     <a asp-action="Login" asp-controller="User">Login</a>
@@ -12,7 +12,7 @@
 
 else
 {
-    <h1>My Todo's - @Model.UserName</h1>
+    <h1>My Todo's - @Model.User.UserName</h1>
 
     <p>
         <a asp-action="CreateTodoList" asp-controller="Todo">Create new todo list</a>
@@ -34,7 +34,7 @@ else
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Title)
+                        <a asp-action="EditTodoList" asp-route-todoListId=@item.Id.ToString()>@item.Title</a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.AllDone)

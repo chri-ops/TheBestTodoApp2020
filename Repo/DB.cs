@@ -16,6 +16,9 @@ namespace Library
         private IMongoCollection<Todo> _todos;
         private const string _TODOS = "todos";
 
+        private IMongoCollection<TodoList> _todoLists;
+        private const string _TODOLISTS = "todolists";
+
         private IMongoCollection<User> _users;
         private const string _USERS = "users";
 
@@ -27,7 +30,16 @@ namespace Library
 
             _todos = _db.GetCollection<Todo>(_TODOS);
 
+            _todoLists = _db.GetCollection<TodoList>(_TODOLISTS);
+
             _users = _db.GetCollection<User>(_USERS);
+        }
+
+        public List<TodoList> GetAllTodoListsForUser(User user)
+        {
+            var todoListsForUser = _todoLists.Find(t => t.UserId == user.Id).ToList();
+
+            return todoListsForUser;
         }
 
         public bool UserNameExists(string userName)
@@ -42,9 +54,9 @@ namespace Library
             }
         }
 
-        public List<Todo> GetAllTodos()
+        public List<Todo> GetAllTodos(ObjectId todoListId)
         {
-            var result = _todos.Find(t => true);
+            var result = _todos.Find(t => t.TodoListId == todoListId);
 
             return result.ToList();
         }
@@ -55,15 +67,13 @@ namespace Library
             _users.InsertOne(user);
         }
 
-        public void AddTodoListToUser(TodoList todoList)
+        public void AddTodoList(TodoList todoList)
         {
             User user = FindLoggedInUser();
 
-            user.TodoLists.Add(todoList);
+            todoList.UserId = user.Id;
 
-            var update = Builders<User>.Update.Set(u => u.TodoLists, user.TodoLists);
-
-            _users.UpdateOne(u => u.Id == user.Id, update);
+            _todoLists.InsertOne(todoList);
         }
 
         public void LogoutAll()
@@ -83,6 +93,11 @@ namespace Library
             User loggedInUser = _users.Find(u => u.IsLoggedIn == true).FirstOrDefault();
 
             return loggedInUser;
+        }
+
+        public void AddTodo(Todo todo)
+        {
+            _todos.InsertOne(todo);
         }
 
         public User GetUserByUserName(string userName)
@@ -118,6 +133,30 @@ namespace Library
             {
                 return false;
             }
+        }
+
+        public TodoList GetTodoListById(ObjectId id)
+        {
+            TodoList todoList = _todoLists.Find(t => t.Id == id).FirstOrDefault();
+
+            return todoList;
+        }
+
+        public Todo GetTodoById(ObjectId id)
+        {
+            Todo todo = _todos.Find(t => t.Id == id).FirstOrDefault();
+
+            return todo;
+        }
+
+        public void UpdateTodo(Todo todo)
+        {
+            var update = Builders<Todo>.Update
+                .Set(t => t.Comment, todo.Comment)
+                .Set(t => t.Description, todo.Description)
+                .Set(t => t.Done, todo.Done);
+
+            _todos.UpdateOne(t => t.Id == todo.Id, update);
         }
     }
 }

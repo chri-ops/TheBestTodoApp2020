@@ -7,9 +7,11 @@ namespace Library.Models
 {
     public class TodoList
     {
-        ObjectId Id { get; set; }
+        public ObjectId Id { get; set; }
         public string Title { get; set; }
         public List<Todo> Todos { get; set; }
+
+        public DateTime ToBeDone { get; set; }
 
         public bool AllDone { get; set; }
 
