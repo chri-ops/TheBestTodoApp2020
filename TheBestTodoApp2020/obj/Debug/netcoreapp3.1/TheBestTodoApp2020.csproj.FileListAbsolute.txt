@@ -127,3 +127,4 @@ C:\Users\lrkon\source\repos\TheBestTodoApp2020\TheBestTodoApp2020\obj\Debug\netc
 C:\Users\lrkon\source\repos\TheBestTodoApp2020\TheBestTodoApp2020\obj\Debug\netcoreapp3.1\Razor\Views\Todo\Index.cshtml.g.cs
 C:\Users\lrkon\source\repos\TheBestTodoApp2020\TheBestTodoApp2020\obj\Debug\netcoreapp3.1\Razor\Views\User\LoggedOut.cshtml.g.cs
 C:\Users\lrkon\source\repos\TheBestTodoApp2020\TheBestTodoApp2020\obj\Debug\netcoreapp3.1\Razor\Views\User\NoUserToLogOut.cshtml.g.cs
+C:\Users\lrkon\source\repos\TheBestTodoApp2020\TheBestTodoApp2020\obj\Debug\netcoreapp3.1\Razor\Views\Todo\CreateTodoList.cshtml.g.cs

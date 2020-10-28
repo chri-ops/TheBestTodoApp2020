@@ -83,7 +83,8 @@ namespace TheBestTodoApp2020.Controllers
 
                 ViewData["LoggedInUserName"] = m.UserName;
 
-                return RedirectToAction("Index", "Todo", new { userName = user.UserName });
+                //return RedirectToAction("Index", "Todo", new { userName = user.UserName });
+                return RedirectToAction("Index", "Todo");
             }
 
             else

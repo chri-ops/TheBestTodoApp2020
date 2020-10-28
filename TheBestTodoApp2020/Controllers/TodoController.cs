@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Library.Models;
 using Library;
+using TheBestTodoApp2020.Models;
+using Library.Models;
+using Library;
 
 namespace TheBestTodoApp2020.Controllers
 {
@@ -28,7 +31,7 @@ namespace TheBestTodoApp2020.Controllers
         }
 
         // GET: TodoController/Create
-        public ActionResult Create()
+        public ActionResult CreateTodoList()
         {
             return View();
         }
@@ -36,11 +39,18 @@ namespace TheBestTodoApp2020.Controllers
         // POST: TodoController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult CreateTodoList(CreateTodoListViewModel m)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                TodoList todoList = new TodoList();
+                todoList.Title = m.Title;
+
+                DB db = new DB();
+
+                db.AddTodoListToUser(todoList);
+
+                return RedirectToAction("Index", "Todo");
             }
             catch
             {

@@ -6,7 +6,8 @@
 
 @if (Model == null)
 {
-    <p>Model is null.</p>
+    <p>No user is logged in. Please Login:</p>
+    <a asp-action="Login" asp-controller="User">Login</a>
 }
 
 else
@@ -14,18 +15,18 @@ else
     <h1>My Todo's - @Model.UserName</h1>
 
     <p>
-        <a asp-action="Create">Create new todo list</a>
+        <a asp-action="CreateTodoList" asp-controller="Todo">Create new todo list</a>
     </p>
     <table class="table">
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.TodoLists)
+                    Todo Lists
                 </th>
+
                 <th>
-                    @Html.DisplayNameFor(model => model.TodoLists)
+                    All done?
                 </th>
-                <th></th>
             </tr>
         </thead>
         <tbody>

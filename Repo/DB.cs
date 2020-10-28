@@ -55,6 +55,17 @@ namespace Library
             _users.InsertOne(user);
         }
 
+        public void AddTodoListToUser(TodoList todoList)
+        {
+            User user = FindLoggedInUser();
+
+            user.TodoLists.Add(todoList);
+
+            var update = Builders<User>.Update.Set(u => u.TodoLists, user.TodoLists);
+
+            _users.UpdateOne(u => u.Id == user.Id, update);
+        }
+
         public void LogoutAll()
         {
             var loggedInUsers = _users.Find(u => u.IsLoggedIn == true).ToList();
