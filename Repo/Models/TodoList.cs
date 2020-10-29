@@ -9,7 +9,8 @@ namespace Library.Models
     {
         public ObjectId Id { get; set; }
         public string Title { get; set; }
-        public List<Todo> Todos { get; set; }
+
+        //public List<Todo> Todos { get; set; }
 
         public DateTime ToBeDone { get; set; }
 
@@ -17,9 +18,9 @@ namespace Library.Models
 
         public ObjectId UserId { get; set; }
 
-        public TodoList()
-        {
-            Todos = new List<Todo>();
-        }
+        //public TodoList()
+        //{
+        //    Todos = new List<Todo>();
+        //}
     }
 }

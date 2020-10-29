@@ -22,6 +22,9 @@ namespace Library
         private IMongoCollection<User> _users;
         private const string _USERS = "users";
 
+        private IMongoCollection<Student> _students;
+        private const string _STUDENTS = "students";
+
         public DB()
         {
             MongoClient client = new MongoClient();
@@ -33,6 +36,8 @@ namespace Library
             _todoLists = _db.GetCollection<TodoList>(_TODOLISTS);
 
             _users = _db.GetCollection<User>(_USERS);
+
+            _students = _db.GetCollection<Student>(_STUDENTS);
         }
 
         public List<TodoList> GetAllTodoListsForUser(User user)
@@ -41,6 +46,13 @@ namespace Library
 
             return todoListsForUser;
         }
+
+        //public List<Todo> GetTodosForTodoList(TodoList todoList)
+        //{
+        //    List<Todo> todos = _todos.Find(t => t.TodoListId == todoList.Id).ToList();
+
+        //    return todos;
+        //}
 
         public bool UserNameExists(string userName)
         {
@@ -54,7 +66,19 @@ namespace Library
             }
         }
 
-        public List<Todo> GetAllTodos(ObjectId todoListId)
+        public void UpdateTodoList(TodoList todoList)
+        {
+            var update = Builders<TodoList>.Update.
+                Set(t => t.AllDone, todoList.AllDone).
+                Set(t => t.Title, todoList.Title).
+                Set(t => t.ToBeDone, todoList.ToBeDone).
+                //Set(t => t.Todos, todoList.Todos).
+                Set(t => t.UserId, todoList.UserId);
+
+            _todoLists.UpdateOne(t => t.Id == todoList.Id, update);
+        }
+
+        public List<Todo> GetAllTodosForTodoList(ObjectId todoListId)
         {
             var result = _todos.Find(t => t.TodoListId == todoListId);
 
@@ -157,6 +181,23 @@ namespace Library
                 .Set(t => t.Done, todo.Done);
 
             _todos.UpdateOne(t => t.Id == todo.Id, update);
+        }
+
+        public void DeleteTodoList(TodoList todoList)
+        {
+            _todoLists.DeleteOne(t => t.Id == todoList.Id);
+
+            List<Todo> allTodosForList = GetAllTodosForTodoList(todoList.Id);
+
+            foreach (Todo todo in allTodosForList)
+            {
+                _todos.DeleteOne(t => t.Id == todo.Id);
+            }
+        }
+
+        public void DeleteTodo(ObjectId todoId)
+        {
+            _todos.DeleteOne(t => t.Id == todoId);
         }
     }
 }

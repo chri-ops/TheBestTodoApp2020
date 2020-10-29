@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Library.Models;
 using Library;
 using TheBestTodoApp2020.Models;
-using Library.Models;
-using Library;
 using MongoDB.Bson;
 
 namespace TheBestTodoApp2020.Controllers
@@ -31,6 +29,35 @@ namespace TheBestTodoApp2020.Controllers
             {
                 m.User = user;
                 m.TodoLists = db.GetAllTodoListsForUser(m.User);
+
+                foreach (TodoList todoList in m.TodoLists)
+                {
+                    bool allDone = true;
+
+                    //List<Todo> todos = db.GetTodosForTodoList(todoList);
+
+                    List<Todo> todos = db.GetAllTodosForTodoList(todoList.Id);
+
+
+                    foreach (Todo todo in todos)
+                    {
+                        if (todo.Done == false)
+                        {
+                            allDone = false;
+                        }
+                    }
+
+                    if (allDone)
+                    {
+                        todoList.AllDone = true;
+                    }
+                    else
+                    {
+                        todoList.AllDone = false;
+                    }
+
+                    db.UpdateTodoList(todoList);
+                }
 
                 return View(m);
             }
@@ -110,25 +137,69 @@ namespace TheBestTodoApp2020.Controllers
         }
 
 
+        public ActionResult EditTodo(string todoId)
+        {
+            DB db = new DB();
+
+            var id = ObjectId.Parse(todoId);
+
+            Todo todo = db.GetTodoById(id);
+
+            EditTodoViewModel m = new EditTodoViewModel();
+
+            m.Comment = todo.Comment;
+            m.Description = todo.Description;
+            m.Done = todo.Done;
+            m.Id = todo.Id.ToString();
+            m.TodoListId = todo.TodoListId.ToString();
+
+            return View(m);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditTodo(EditTodoViewModel m)
+        {
+            DB db = new DB();
+
+            Todo todo = new Todo();
+
+            todo.Comment = m.Comment;
+            todo.Description = m.Description;
+            todo.Done = m.Done;
+
+            todo.Id = ObjectId.Parse(m.Id);
+            todo.TodoListId = ObjectId.Parse(m.TodoListId);
+
+            db.UpdateTodo(todo);
+
+            // View for todoList for current Todo..
+
+            return RedirectToAction("EditTodoList", new { todoListId = todo.TodoListId.ToString() });
+        }
+
 
         // GET: TodoController/Edit/5
         public ActionResult EditTodoList(string todoListId)
         {
-            EditTodoListViewModel m = new EditTodoListViewModel();
+            //EditTodoListViewModel m = new EditTodoListViewModel();
+
+            //m.TodoListId = todoListId;
 
             var id = ObjectId.Parse(todoListId);
-            m.TodoListId = id;
             
             DB db = new DB();
 
             TodoList todoList = db.GetTodoListById(id);
 
-            m.TodoListTitle = todoList.Title;
-            m.listOfTodos = db.GetAllTodos(id);
+            ViewData["TodoListId"] = todoList.Id.ToString();
+            ViewData["TodoListTitle"] = todoList.Title.ToString();
 
-            return View(m);
+            List<Todo> listOfTodos = db.GetAllTodosForTodoList(id);
+
+            return View(listOfTodos);
         }
-
+ 
         public ActionResult CheckTodo(string todoId)
         {
             var id = ObjectId.Parse(todoId);
@@ -137,13 +208,19 @@ namespace TheBestTodoApp2020.Controllers
 
             Todo todo = db.GetTodoById(id);
 
-            CheckTodoViewModel m = new CheckTodoViewModel();
+            //CheckTodoViewModel m = new CheckTodoViewModel();
 
-            m.TodoId = todo.Id.ToString();
-            m.Description = todo.Description;
-            m.Done = todo.Done;
+            //m.TodoId = todo.Id.ToString();
+            //m.Description = todo.Description;
+            //m.Done = todo.Done;
 
-            return View("CheckTodo", m);
+            //Checking/unchecking the Done-box
+            if (todo.Done == true) todo.Done = false;
+            else todo.Done = true;
+
+            db.UpdateTodo(todo);
+
+            return RedirectToAction("EditTodoList", new { todoListId = todo.TodoListId.ToString() });
         }
 
         // POST: TodoController/Edit/5
@@ -178,19 +255,30 @@ namespace TheBestTodoApp2020.Controllers
         }
 
         // GET: TodoController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult DeleteTodoList(string todoListId)
         {
-            return View();
+            var id = ObjectId.Parse(todoListId);
+
+            DB db = new DB();
+
+            TodoList todoList = db.GetTodoListById(id);
+
+            db.DeleteTodoList(todoList);
+
+            return RedirectToAction("Index", "Todo");
         }
 
         // POST: TodoController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        
+        public ActionResult DeleteTodo(string todoId, string todoListId)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                DB db = new DB();
+
+                db.DeleteTodo(todoId);
+
+                return RedirectToAction("EditTodoList", new { todoListId = todoListId });
             }
             catch
             {

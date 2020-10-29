@@ -15,17 +15,21 @@ else
     <h1>My Todo's - @Model.User.UserName</h1>
 
     <p>
-        <a asp-action="CreateTodoList" asp-controller="Todo">Create new todo list</a>
+        <a asp-action="CreateTodoList" asp-controller="Todo">Create new Todo List</a>
     </p>
     <table class="table">
         <thead>
             <tr>
                 <th>
-                    Todo Lists
+                    Todo list
                 </th>
 
                 <th>
                     All done?
+                </th>
+
+                <th>
+                    Action
                 </th>
             </tr>
         </thead>
@@ -40,9 +44,7 @@ else
                         @Html.DisplayFor(modelItem => item.AllDone)
                     </td>
                     <td>
-                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                        <a class="btn btn-danger" asp-action="DeleteTodoList" asp-route-todoListId=@item.Id>Delete Todo List</a>
                     </td>
                 </tr>
             }

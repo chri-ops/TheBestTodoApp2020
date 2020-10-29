@@ -9,10 +9,12 @@ namespace TheBestTodoApp2020.Models
 {
     public class EditTodoListViewModel
     {
-        public ObjectId TodoListId { get; set; }
+        public string TodoListId { get; set; }
         public List<Todo> listOfTodos { get; set; }
 
         public string TodoListTitle { get; set; }
+
+        public string CheckedTodoId { get; set; }
 
         public EditTodoListViewModel()
         {

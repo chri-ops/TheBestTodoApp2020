@@ -1,48 +1,59 @@
-﻿@model TheBestTodoApp2020.Models.EditTodoListViewModel
+﻿@model IEnumerable<Library.Models.Todo>
 
 @{
-    ViewData["Title"] = "Check todo list";
+    ViewData["Title"] = "Edit Todo list";
 }
 
-<h1>Todo list</h1>
-<p><b>@Model.TodoListTitle</b></p>
+<h1>@ViewData["TodoListTitle"]</h1>
 
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="EditTodoList">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+<p>
+    <a asp-action="CreateTodo" asp-route-todoListId=@ViewData["TodoListId"].ToString()>Create new Todo in this List</a>
+</p>
 
-                @foreach (var item in Model.listOfTodos)
-                {
-                <div style="float: left; margin-right: 10px;">
-                    @Html.DisplayFor(modelItem => item.Done)
-                </div>
-                    <a class="btn btn-primary" asp-action="CheckTodo" asp-route-todoId=@item.Id>Check!</a>
-                    @Html.DisplayFor(modelItem => item.Description)
-                    @*<p>Description: @item.Description</p>*@
-
-
-                    @*<p>To be done: @item.ToBeDone.</p><br />*@
-                    <br />
-                    @*<p style="float: left; margin-right: 10px;">Done </p>*@
-                    @*<p>Done: @item.Done</p>*@
-
-                    <hr />
-                }
-
-                @*<input type="submit" value="Save" class="btn btn-primary" />*@
-            </div>
-        </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Check/uncheck
+            </th>
+            <th>
+                Todo
+                @*@Html.DisplayNameFor(model => model.Description)*@
+            </th>
+            <th>
+                Done?
+                @*@Html.DisplayNameFor(model => model.Done)*@
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <a class="btn btn-success" asp-action="CheckTodo" asp-route-todoId=@item.Id.ToString()>v</a>
+            </td>
+            <td>
+                <a asp-action="EditTodo" asp-route-todoId=@item.Id.ToString()>@item.Description</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Done)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td>
+                @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
+                <a class="btn btn-danger" asp-action="DeleteTodo" asp-route-todoId=@item.Id.ToString() asp-route-todoListId=@ViewData["TodoListId"].ToString()>Delete Todo</a>
+            </td>
+        </tr>
 }
+    </tbody>
+</table>
 
+<a asp-action="Index" asp-controller="Todo">Return to My Todo Lists</a>
