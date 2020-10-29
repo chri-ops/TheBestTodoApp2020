@@ -27,7 +27,7 @@ namespace Library
 
         public DB()
         {
-            MongoClient client = new MongoClient();
+            MongoClient client = new MongoClient("mongodb+srv://krishanromeda:Charliewasourdog1982@cluster0.bhta4.mongodb.net/thebesttodoapp2020?retryWrites=true&w=majority");
 
             _db = client.GetDatabase("thebesttodoapp2020");
 

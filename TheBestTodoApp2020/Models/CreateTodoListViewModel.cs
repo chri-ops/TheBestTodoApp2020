@@ -10,5 +10,7 @@ namespace TheBestTodoApp2020.Models
     {
         [Required]
         public string Title { get; set; }
+
+        // public DateTime ToBeDone { get; set; }
     }
 }

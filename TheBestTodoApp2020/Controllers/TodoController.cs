@@ -276,7 +276,9 @@ namespace TheBestTodoApp2020.Controllers
             {
                 DB db = new DB();
 
-                db.DeleteTodo(todoId);
+                var id = ObjectId.Parse(todoId);
+
+                db.DeleteTodo(id);
 
                 return RedirectToAction("EditTodoList", new { todoListId = todoListId });
             }
