@@ -8,9 +8,12 @@ using Library.Models;
 using Library;
 using TheBestTodoApp2020.Models;
 using MongoDB.Bson;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace TheBestTodoApp2020.Controllers
 {
+    [Authorize]
     public class TodoController : Controller
     {
         // GET: TodoController
@@ -18,7 +21,10 @@ namespace TheBestTodoApp2020.Controllers
         {
             DB db = new DB();
             TodoIndexViewModel m = new TodoIndexViewModel();
-            User user = db.FindLoggedInUser();
+
+            var userName = User.FindFirstValue(ClaimTypes.Name);
+
+            User user = db.FindLoggedInUser(userName);
 
             if (user == null)
             {
@@ -38,12 +44,19 @@ namespace TheBestTodoApp2020.Controllers
 
                     List<Todo> todos = db.GetAllTodosForTodoList(todoList.Id);
 
+                    todoList.AmountOfTodos = todos.Count; // Sets the amount of todo's for list into list prop.
+                    todoList.AmountOfDoneTodos = 0; // Presets the counter to zero.
+
 
                     foreach (Todo todo in todos)
                     {
                         if (todo.Done == false)
                         {
                             allDone = false;
+                        }
+                        else
+                        {
+                            todoList.AmountOfDoneTodos++; // for every done todo, add to the amount of done todos-prop in todolist.
                         }
                     }
 
@@ -87,7 +100,9 @@ namespace TheBestTodoApp2020.Controllers
 
                 DB db = new DB();
 
-                db.AddTodoList(todoList);
+                var userName = User.FindFirstValue(ClaimTypes.Name);
+
+                db.AddTodoList(todoList, userName);
 
                 return RedirectToAction("CreateTodo", "Todo", new { todoListId = todoList.Id.ToString() });
             }
@@ -121,8 +136,10 @@ namespace TheBestTodoApp2020.Controllers
         {
             Todo todo = new Todo();
 
+            todo.Comment = m.Comment;
             todo.Description = m.Description;
             todo.Done = m.Done;
+            
             //todo.ToBeDone = m.ToBeDone;
             todo.TodoListId = ObjectId.Parse(m.TodoListId);
 

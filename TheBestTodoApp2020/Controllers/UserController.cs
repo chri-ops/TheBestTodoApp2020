@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using TheBestTodoApp2020.Models;
 using Library.Models;
 using Library;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace TheBestTodoApp2020.Controllers
 {
@@ -51,27 +54,8 @@ namespace TheBestTodoApp2020.Controllers
             return View();
         }
 
-        public IActionResult Logout()
-        {
-            DB db = new DB();
-
-            bool anyLoggedInUser = db.LogoutUser();
-
-            if (anyLoggedInUser)
-            {
-                return View("LoggedOut");
-            }
-
-            else
-            {
-                return View("NoUserToLogOut");
-            }
-
-            
-        }
-
         [HttpPost]
-        public IActionResult Login(LoginViewModel m)
+        public async Task<IActionResult> Login(LoginViewModel m) // edited
         {
             DB db = new DB();
 
@@ -83,6 +67,19 @@ namespace TheBestTodoApp2020.Controllers
 
                 ViewData["LoggedInUserName"] = m.UserName;
 
+                //adding..
+
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, m.UserName)
+                };
+
+                var claimsIdentity = new ClaimsIdentity(claims, "Login");
+
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+                //
+
                 //return RedirectToAction("Index", "Todo", new { userName = user.UserName });
                 return RedirectToAction("Index", "Todo");
             }
@@ -90,6 +87,27 @@ namespace TheBestTodoApp2020.Controllers
             else
             {
                 return View("UserNotFound");
+            }
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            DB db = new DB();
+
+            var userName = User.FindFirstValue(ClaimTypes.Name);
+
+            bool anyLoggedInUser = db.LogoutUser(userName);
+
+            if (anyLoggedInUser)
+            {
+                await HttpContext.SignOutAsync(); // added
+
+                return View("LoggedOut");
+            }
+
+            else
+            {
+                return View("NoUserToLogOut");
             }
         }
 

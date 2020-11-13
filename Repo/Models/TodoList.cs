@@ -16,6 +16,10 @@ namespace Library.Models
 
         public bool AllDone { get; set; }
 
+        public int AmountOfTodos { get; set; }
+
+        public int AmountOfDoneTodos { get; set; }
+
         public ObjectId UserId { get; set; }
 
         //public TodoList()

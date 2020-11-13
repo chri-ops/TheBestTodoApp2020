@@ -27,6 +27,8 @@ namespace Library
 
         public DB()
         {
+            //MongoClient client = new MongoClient();
+
             MongoClient client = new MongoClient("mongodb+srv://krishanromeda:Charliewasourdog1982@cluster0.bhta4.mongodb.net/thebesttodoapp2020?retryWrites=true&w=majority");
 
             _db = client.GetDatabase("thebesttodoapp2020");
@@ -91,9 +93,9 @@ namespace Library
             _users.InsertOne(user);
         }
 
-        public void AddTodoList(TodoList todoList)
+        public void AddTodoList(TodoList todoList, string userName)
         {
-            User user = FindLoggedInUser();
+            User user = FindLoggedInUser(userName);
 
             todoList.UserId = user.Id;
 
@@ -112,9 +114,9 @@ namespace Library
             }
         }
 
-        public User FindLoggedInUser()
+        public User FindLoggedInUser(string userName)
         {
-            User loggedInUser = _users.Find(u => u.IsLoggedIn == true).FirstOrDefault();
+            User loggedInUser = _users.Find(u => u.UserName == userName).FirstOrDefault();
 
             return loggedInUser;
         }
@@ -133,16 +135,16 @@ namespace Library
 
         public void LoginUser(User user)
         {
-            LogoutAll();
+            // LogoutAll(); // edited out
 
             var update = Builders<User>.Update.Set(u => u.IsLoggedIn, true);
 
             _users.UpdateOne(u => u.Id == user.Id, update);
         }
 
-        public bool LogoutUser()
+        public bool LogoutUser(string userName)
         {
-            User loggedInUser = FindLoggedInUser();
+            User loggedInUser = FindLoggedInUser(userName);
 
             if (loggedInUser != null)
             {

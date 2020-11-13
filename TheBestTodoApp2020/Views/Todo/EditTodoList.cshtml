@@ -14,16 +14,16 @@
     <thead>
         <tr>
             <th>
-                Check/uncheck
+                Done?
             </th>
             <th>
                 Todo
                 @*@Html.DisplayNameFor(model => model.Description)*@
             </th>
-            <th>
-                Done?
+            <!--<th>
+                Done?-->
                 @*@Html.DisplayNameFor(model => model.Done)*@
-            </th>
+            <!--</th>-->
             <th>
                 @Html.DisplayNameFor(model => model.Comment)
             </th>
@@ -34,14 +34,21 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                <a class="btn btn-success" asp-action="CheckTodo" asp-route-todoId=@item.Id.ToString()>v</a>
+                @if (item.Done)
+                {
+                    <a class="btn btn-light" style="color: black" asp-action="CheckTodo" asp-route-todoId=@item.Id.ToString()><b>X</b></a>
+                }
+                else
+                {
+                    <a class="btn btn-light" style="color: white" asp-action="CheckTodo" asp-route-todoId=@item.Id.ToString()><b><span style="opacity: 0">X</span></b></a>
+                }
             </td>
             <td>
                 <a asp-action="EditTodo" asp-route-todoId=@item.Id.ToString()>@item.Description</a>
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.Done)
-            </td>
+            </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.Comment)
             </td>

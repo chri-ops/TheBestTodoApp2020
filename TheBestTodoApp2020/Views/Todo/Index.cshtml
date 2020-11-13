@@ -25,7 +25,7 @@ else
                 </th>
 
                 <th>
-                    All done?
+                    % Done
                 </th>
 
                 <th>
@@ -41,7 +41,32 @@ else
                         <a asp-action="EditTodoList" asp-route-todoListId=@item.Id.ToString()>@item.Title</a>
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.AllDone)
+                            @{
+                                string tempColor = "black";
+                                string displayMsg = "";
+                            }
+
+                            @if (item.AmountOfDoneTodos < item.AmountOfTodos || item.AmountOfDoneTodos < 1)
+                            {
+                                if (item.AmountOfDoneTodos > 0)
+                                {
+                                    tempColor = "gold"; 
+                                }
+                                else tempColor = "red";
+                            }
+
+                            else if (item.AmountOfDoneTodos == item.AmountOfTodos)
+                            {
+                                tempColor = "green";
+                                displayMsg = " - ALL DONE!";
+                            }
+                            @if (item.AmountOfTodos < 1)
+                            {
+                                displayMsg = " - NO TODO'S! ";
+                            }
+
+                            <p style="color: @tempColor"><b>@item.AmountOfDoneTodos / @item.AmountOfTodos @displayMsg</b></p>
+
                     </td>
                     <td>
                         <a class="btn btn-danger" asp-action="DeleteTodoList" asp-route-todoListId=@item.Id>Delete Todo List</a>
