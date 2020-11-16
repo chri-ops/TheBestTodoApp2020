@@ -216,7 +216,43 @@ namespace TheBestTodoApp2020.Controllers
 
             return View(listOfTodos);
         }
- 
+
+        public IActionResult EditTodoListTitle(string todoListId)
+        {
+            DB db = new DB();
+
+            var id = ObjectId.Parse(todoListId);
+
+            TodoList todoList = db.GetTodoListById(id);
+
+            ViewData["TodoListId"] = todoList.Id.ToString();
+            ViewData["TodoListTitle"] = todoList.Title.ToString();
+
+            EditTodoListTitleViewModel m = new EditTodoListTitleViewModel();
+
+            m.Title = todoList.Title;
+            m.TodoListId = todoList.Id.ToString();
+
+            return View(m);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditTodoListTitle(EditTodoListTitleViewModel m)
+        {
+            DB db = new DB();
+
+            var id = ObjectId.Parse(m.TodoListId);
+
+            TodoList todoList = db.GetTodoListById(id);
+
+            todoList.Title = m.Title;
+
+            db.UpdateTodoList(todoList);
+
+            return RedirectToAction("EditTodoList", new { todoListId = todoList.Id.ToString() });
+        }
+
         public ActionResult CheckTodo(string todoId)
         {
             var id = ObjectId.Parse(todoId);

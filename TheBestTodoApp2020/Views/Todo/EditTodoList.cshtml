@@ -4,7 +4,9 @@
     ViewData["Title"] = "Edit Todo List";
 }
 
-<h1>@ViewData["TodoListTitle"]</h1>
+<h1>@ViewData["TodoListTitle"]</h1><a asp-controller="Todo" asp-action="EditTodoListTitle" asp-route-todoListId=@ViewData["TodoListId"]><span style="margin-right: 10px;" class="glyphicon glyphicon-pencil"></span>Edit Title</a>
+<br />
+<br />
 
 <p>
     <a class="btn btn-success" asp-action="CreateTodo" asp-route-todoListId=@ViewData["TodoListId"].ToString()>Create A New Todo...</a>
