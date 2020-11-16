@@ -37,6 +37,9 @@ namespace TheBestTodoApp2020.Controllers
                 user.Password = m.Password;
                 user.UserName = m.UserName;
 
+                // SHA-512 Hashing for password
+                //
+
                 db.CreateUser(user);
 
                 return View("UserCreated");

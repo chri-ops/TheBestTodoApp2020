@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<Library.Models.Todo>
 
 @{
-    ViewData["Title"] = "Edit Todo list";
+    ViewData["Title"] = "Edit Todo List";
 }
 
 <h1>@ViewData["TodoListTitle"]</h1>
 
 <p>
-    <a asp-action="CreateTodo" asp-route-todoListId=@ViewData["TodoListId"].ToString()>Create new Todo in this List</a>
+    <a class="btn btn-success" asp-action="CreateTodo" asp-route-todoListId=@ViewData["TodoListId"].ToString()>Create A New Todo...</a>
 </p>
 
 <table class="table">
@@ -27,7 +27,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Comment)
             </th>
-            <th></th>
+            <th>
+                Action
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -36,11 +38,11 @@
             <td>
                 @if (item.Done)
                 {
-                    <a class="btn btn-light" style="color: black" asp-action="CheckTodo" asp-route-todoId=@item.Id.ToString()><b>X</b></a>
+                    <a class="btn-sm btn-dark" style="color: white" asp-action="CheckTodo" asp-route-todoId=@item.Id.ToString()><b>X</b></a>
                 }
                 else
                 {
-                    <a class="btn btn-light" style="color: white" asp-action="CheckTodo" asp-route-todoId=@item.Id.ToString()><b><span style="opacity: 0">X</span></b></a>
+                    <a class="btn-sm btn-dark" style="color: black" asp-action="CheckTodo" asp-route-todoId=@item.Id.ToString()><b><span style="opacity: 0">X</span></b></a>
                 }
             </td>
             <td>
@@ -63,4 +65,4 @@
     </tbody>
 </table>
 
-<a asp-action="Index" asp-controller="Todo">Return to My Todo Lists</a>
+<a asp-action="Index" asp-controller="Todo">Return To My Todo Lists</a>

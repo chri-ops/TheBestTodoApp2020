@@ -1,8 +1,9 @@
 ﻿
 @{
-    ViewData["Title"] = "User name taken!";
+    ViewData["Title"] = "User Name Taken!";
 }
 
-<h1>The user name @ViewData["takenUserName"] is already taken! Please use another one.</h1>
-<a asp-action="CreateUser">Return to user creation form</a>
+<h1>User Name Taken!</h1>
+<p>The user name @ViewData["takenUserName"] is already taken. Please use another one.</p>
+<a asp-action="CreateUser">Return To User Account Creation</a>
 

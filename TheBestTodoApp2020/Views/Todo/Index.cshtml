@@ -1,11 +1,12 @@
 ﻿@model TheBestTodoApp2020.Models.TodoIndexViewModel
 
 @{
-    ViewData["Title"] = "My Todo's";
+    ViewData["Title"] = "My Todo Lists";
 }
 
 @if (Model.User == null)
 {
+    <h1>No User Logged In!</h1>
     <p>No user is logged in. Please Login:</p>
     <a asp-action="Login" asp-controller="User">Login</a>
 }
@@ -15,17 +16,17 @@ else
     <h1>My Todo's - @Model.User.UserName</h1>
 
     <p>
-        <a asp-action="CreateTodoList" asp-controller="Todo">Create new Todo List</a>
+        <a class="btn btn-success" asp-action="CreateTodoList" asp-controller="Todo">Create New Todo List</a>
     </p>
     <table class="table">
         <thead>
             <tr>
                 <th>
-                    Todo list
+                    Todo List
                 </th>
 
                 <th>
-                    % Done
+                    Amount Done
                 </th>
 
                 <th>
@@ -41,35 +42,37 @@ else
                         <a asp-action="EditTodoList" asp-route-todoListId=@item.Id.ToString()>@item.Title</a>
                     </td>
                     <td>
-                            @{
-                                string tempColor = "black";
-                                string displayMsg = "";
-                            }
+                        @{
+                            string tempColor = "black";
+                            string extraMsg = "";
+                        }
 
-                            @if (item.AmountOfDoneTodos < item.AmountOfTodos || item.AmountOfDoneTodos < 1)
+                        @if (item.AmountOfDoneTodos < item.AmountOfTodos || item.AmountOfDoneTodos < 1)
+                        {
+                            if (item.AmountOfDoneTodos > 0)
                             {
-                                if (item.AmountOfDoneTodos > 0)
-                                {
-                                    tempColor = "gold"; 
-                                }
-                                else tempColor = "red";
+                                tempColor = "gold";
                             }
+                            else tempColor = "red";
+                        }
 
-                            else if (item.AmountOfDoneTodos == item.AmountOfTodos)
-                            {
-                                tempColor = "green";
-                                displayMsg = " - ALL DONE!";
-                            }
-                            @if (item.AmountOfTodos < 1)
-                            {
-                                displayMsg = " - NO TODO'S! ";
-                            }
-
-                            <p style="color: @tempColor"><b>@item.AmountOfDoneTodos / @item.AmountOfTodos @displayMsg</b></p>
+                        else if (item.AmountOfDoneTodos == item.AmountOfTodos)
+                        {
+                            tempColor = "#f8f9fa";
+                            extraMsg = " - Completed!";
+                        }
+                        @if (item.AmountOfTodos > 0)
+                        {
+                            <p style="color: @tempColor"><b>@item.AmountOfDoneTodos of @item.AmountOfTodos @extraMsg</b></p>
+                        }
+                        else if (item.AmountOfTodos < 1)
+                        {
+                            <p style="color: @tempColor"><b>Empty List</b></p>
+                        }
 
                     </td>
                     <td>
-                        <a class="btn btn-danger" asp-action="DeleteTodoList" asp-route-todoListId=@item.Id>Delete Todo List</a>
+                        <a class="btn btn-danger" asp-action="DeleteTodoList" asp-route-todoListId=@item.Id>Delete List</a>
                     </td>
                 </tr>
             }

@@ -13,7 +13,7 @@ namespace TheBestTodoApp2020.Models
         public string TodoListId { get; set; }
         [Required]
         public string Description { get; set; }
-        [Required]
+        //[Required]
         //public DateTime ToBeDone { get; set; }
         public bool Done { get; set; }
         public string Comment { get; set; }
