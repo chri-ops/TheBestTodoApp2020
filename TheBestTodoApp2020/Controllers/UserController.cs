@@ -30,7 +30,7 @@ namespace TheBestTodoApp2020.Controllers
 
             if (!db.UserNameExists(m.UserName))
             {
-                if (m.P == m.PC)
+                if (m.P == m.PC) // yepo
                 {
                     User user = new User();
 
