@@ -1,4 +1,5 @@
 ﻿@model TheBestTodoApp2020.Models.CreateTodoListViewModel
+@using Library.Models
 
 @{
     ViewData["Title"] = "Create Todo List";
@@ -15,6 +16,16 @@
                 <label asp-for="Title" class="control-label">Enter title for this todo list (example: Packing for trip)</label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryName" class="control-label">Choose a category for this list (optional):</label>
+                <select asp-for="CategoryName" class="form-control">
+                    <option value="">-none-</option>
+                    @foreach (var item in Model.AllCategories)
+                    {
+                        <option value=@item.Name.ToString()>@item.Name</option>
+                    }
+                </select>
             </div>
             <!--<div class="form-group form-check">-->
                 @*<label class="form-check-label">

@@ -4,7 +4,8 @@
     ViewData["Title"] = "Edit Todo List";
 }
 
-<h1>@ViewData["TodoListTitle"]</h1><a asp-controller="Todo" asp-action="EditTodoListTitle" asp-route-todoListId=@ViewData["TodoListId"]><span style="margin-right: 10px;" class="glyphicon glyphicon-pencil"></span>Edit Title</a>
+<h1>@ViewData["TodoListTitle"]<partial style="font-size: 28px; color: maroon">@ViewData["Category"]</partial></h1>
+<a asp-controller="Todo" asp-action="EditTodoListTitle" asp-route-todoListId=@ViewData["TodoListId"]><span style="margin-right: 10px;" class="glyphicon glyphicon-pencil"></span>Edit Title And Category</a>
 <br />
 <br />
 
@@ -60,7 +61,7 @@
                 @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
                 @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
                 @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
-                <a class="btn btn-danger" asp-action="DeleteTodo" asp-route-todoId=@item.Id.ToString() asp-route-todoListId=@ViewData["TodoListId"].ToString()>Delete Todo</a>
+                <a class="btn btn-danger" asp-action="DeleteTodo" asp-route-todoId=@item.Id.ToString() asp-route-todoListId=@ViewData["TodoListId"].ToString()>Delete</a>
             </td>
         </tr>
 }

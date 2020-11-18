@@ -6,14 +6,9 @@ using System.Threading.Tasks;
 
 namespace TheBestTodoApp2020.Models
 {
-    public class LoginViewModel
+    public class CreateCategoryViewModel
     {
         [Required]
-        public string UserName { get; set; }
-
-        [Required]
-        public string P { get; set; }
-
-        public string ReturnUrl { get; set; }
+        public string CategoryName { get; set; }
     }
 }

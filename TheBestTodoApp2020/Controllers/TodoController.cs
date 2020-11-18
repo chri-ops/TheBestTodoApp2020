@@ -85,7 +85,17 @@ namespace TheBestTodoApp2020.Controllers
         // GET: TodoController/Create
         public ActionResult CreateTodoList()
         {
-            return View();
+            DB db = new DB();
+
+            CreateTodoListViewModel m = new CreateTodoListViewModel();
+
+            var userName = User.FindFirstValue(ClaimTypes.Name);
+
+            User user = db.GetUserByUserName(userName);
+
+            m.AllCategories = db.GetAllCategoriesByUser(user);
+
+            return View(m);
         }
 
         // POST: TodoController/Create
@@ -95,10 +105,12 @@ namespace TheBestTodoApp2020.Controllers
         {
             try
             {
+                DB db = new DB();
+                Category category = db.GetCategoryByName(m.CategoryName);
+
                 TodoList todoList = new TodoList();
                 todoList.Title = m.Title;
-
-                DB db = new DB();
+                todoList.Category = category;
 
                 var userName = User.FindFirstValue(ClaimTypes.Name);
 
@@ -211,6 +223,8 @@ namespace TheBestTodoApp2020.Controllers
 
             ViewData["TodoListId"] = todoList.Id.ToString();
             ViewData["TodoListTitle"] = todoList.Title.ToString();
+            if (todoList.Category != null) ViewData["Category"] = " [ " + todoList.Category.Name + " ]";
+            else ViewData["Category"] = "";
 
             List<Todo> listOfTodos = db.GetAllTodosForTodoList(id);
 
@@ -222,8 +236,11 @@ namespace TheBestTodoApp2020.Controllers
             DB db = new DB();
 
             var id = ObjectId.Parse(todoListId);
-
             TodoList todoList = db.GetTodoListById(id);
+
+            var userName = User.FindFirstValue(ClaimTypes.Name);
+
+            User user = db.GetUserByUserName(userName);
 
             ViewData["TodoListId"] = todoList.Id.ToString();
             ViewData["TodoListTitle"] = todoList.Title.ToString();
@@ -232,6 +249,11 @@ namespace TheBestTodoApp2020.Controllers
 
             m.Title = todoList.Title;
             m.TodoListId = todoList.Id.ToString();
+
+            if (todoList.Category == null || String.IsNullOrEmpty(todoList.Category.Name)) m.CategoryName = "";
+            else m.CategoryName = todoList.Category.Name;
+            
+            m.AllCategories = db.GetAllCategoriesByUser(user);
 
             return View(m);
         }
@@ -247,6 +269,9 @@ namespace TheBestTodoApp2020.Controllers
             TodoList todoList = db.GetTodoListById(id);
 
             todoList.Title = m.Title;
+
+            if (String.IsNullOrEmpty(m.CategoryName)) todoList.Category = null;
+            else todoList.Category = db.GetCategoryByName(m.CategoryName);
 
             db.UpdateTodoList(todoList);
 

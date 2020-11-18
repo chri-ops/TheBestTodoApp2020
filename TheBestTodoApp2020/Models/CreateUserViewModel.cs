@@ -18,6 +18,9 @@ namespace TheBestTodoApp2020.Models
         [Required]
         public string Email { get; set; }
         [Required]
-        public string Password { get; set; }
+        public string P { get; set; }
+
+        [Required]
+        public string PC { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Library.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,5 +12,8 @@ namespace TheBestTodoApp2020.Models
         public string TodoListId { get; set; }
         [Required]
         public string Title { get; set; }
+        public string CategoryName { get; set; }
+
+        public List<Category> AllCategories { get; set; } = new List<Category>();
     }
 }

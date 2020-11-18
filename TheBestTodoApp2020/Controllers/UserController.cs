@@ -30,19 +30,25 @@ namespace TheBestTodoApp2020.Controllers
 
             if (!db.UserNameExists(m.UserName))
             {
-                User user = new User();
+                if (m.P == m.PC)
+                {
+                    User user = new User();
 
-                user.Email = m.Email;
-                user.FirstName = m.FirstName;
-                user.Password = m.Password;
-                user.UserName = m.UserName;
+                    user.Email = m.Email;
+                    user.FirstName = m.FirstName;
+                    // user.P = m.P;
+                    user.UserName = m.UserName;
 
-                // SHA-512 Hashing for password
-                //
+                    user.P = PS.HP(m.P); // sP:s
+                    db.CreateUser(user);
 
-                db.CreateUser(user);
+                    return View("UserCreated");
+                }
 
-                return View("UserCreated");
+                else
+                {
+                    return View("PasswordConfirmationError");
+                }
             }
 
             else
@@ -52,9 +58,12 @@ namespace TheBestTodoApp2020.Controllers
             }
         }
 
-        public IActionResult Login()
+        public IActionResult Login(string ReturnUrl)
         {
-            return View();
+            LoginViewModel m = new LoginViewModel();
+            m.ReturnUrl = ReturnUrl;
+
+            return View(m);
         }
 
         [HttpPost]
@@ -64,27 +73,55 @@ namespace TheBestTodoApp2020.Controllers
 
             User user = db.GetUserByUserName(m.UserName);
 
-            if (user != null && m.Password == user.Password)
+            if (user != null)
             {
-                db.LoginUser(user);
+                // User found..
 
-                ViewData["LoggedInUserName"] = m.UserName;
+                string[] SP = user.P.Split(":");
+                string S = SP[1];
+                string C = $"{m.P}:{S}";
+                string hR = PS.CS(C);
 
-                //adding..
-
-                var claims = new List<Claim>
+                if (hR == SP[0])
                 {
-                    new Claim(ClaimTypes.Name, m.UserName)
-                };
+                    // Correct P
 
-                var claimsIdentity = new ClaimsIdentity(claims, "Login");
+                    db.LoginUser(user);
 
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+                    ViewData["LoggedInUserName"] = m.UserName;
 
-                //
+                    //adding..
 
-                //return RedirectToAction("Index", "Todo", new { userName = user.UserName });
-                return RedirectToAction("Index", "Todo");
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, m.UserName)
+                    };
+
+                    var claimsIdentity = new ClaimsIdentity(claims, "Login");
+
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+                    //
+
+                    //return RedirectToAction("Index", "Todo", new { userName = user.UserName });
+
+                    if (m.ReturnUrl == "/Category")
+                    {
+                        return RedirectToAction("Index", "Category");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Todo");
+                    }
+                }
+
+                else
+                {
+                    // Incorrect P
+
+                    return View("UserNotFound");
+                }
+
             }
 
             else
@@ -114,73 +151,73 @@ namespace TheBestTodoApp2020.Controllers
             }
         }
 
-        // GET: UserController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
+        //// GET: UserController/Details/5
+        //public ActionResult Details(int id)
+        //{
+        //    return View();
+        //}
 
-        // GET: UserController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
+        //// GET: UserController/Create
+        //public ActionResult Create()
+        //{
+        //    return View();
+        //}
 
-        // POST: UserController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //// POST: UserController/Create
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create(IFormCollection collection)
+        //{
+        //    try
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
 
-        // GET: UserController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+        //// GET: UserController/Edit/5
+        //public ActionResult Edit(int id)
+        //{
+        //    return View();
+        //}
 
-        // POST: UserController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //// POST: UserController/Edit/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit(int id, IFormCollection collection)
+        //{
+        //    try
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
 
-        // GET: UserController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+        //// GET: UserController/Delete/5
+        //public ActionResult Delete(int id)
+        //{
+        //    return View();
+        //}
 
-        // POST: UserController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //// POST: UserController/Delete/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Delete(int id, IFormCollection collection)
+        //{
+        //    try
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
     }
 }

@@ -136,3 +136,7 @@ C:\Users\lrkon\source\repos\TheBestTodoApp2020\TheBestTodoApp2020\bin\Debug\netc
 C:\Users\lrkon\source\repos\TheBestTodoApp2020\TheBestTodoApp2020\obj\Debug\netcoreapp3.1\scopedcss\bundle\TheBestTodoApp2020.styles.css
 C:\Users\lrkon\source\repos\TheBestTodoApp2020\TheBestTodoApp2020\obj\Debug\netcoreapp3.1\Razor\Views\Todo\ChTodo.cshtml.g.cs
 C:\Users\lrkon\source\repos\TheBestTodoApp2020\TheBestTodoApp2020\obj\Debug\netcoreapp3.1\Razor\Views\Todo\EditTodoListTitle.cshtml.g.cs
+C:\Users\lrkon\source\repos\TheBestTodoApp2020\TheBestTodoApp2020\obj\Debug\netcoreapp3.1\Razor\Views\Category\Index.cshtml.g.cs
+C:\Users\lrkon\source\repos\TheBestTodoApp2020\TheBestTodoApp2020\obj\Debug\netcoreapp3.1\Razor\Views\Category\CategoryAlreadyExists.cshtml.g.cs
+C:\Users\lrkon\source\repos\TheBestTodoApp2020\TheBestTodoApp2020\obj\Debug\netcoreapp3.1\Razor\Views\Category\CreateCategory.cshtml.g.cs
+C:\Users\lrkon\source\repos\TheBestTodoApp2020\TheBestTodoApp2020\obj\Debug\netcoreapp3.1\Razor\Views\User\PasswordConfirmationError.cshtml.g.cs

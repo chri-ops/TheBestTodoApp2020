@@ -20,6 +20,8 @@ namespace Library.Models
 
         public int AmountOfDoneTodos { get; set; }
 
+        public Category Category { get; set; }
+
         public ObjectId UserId { get; set; }
 
         //public TodoList()

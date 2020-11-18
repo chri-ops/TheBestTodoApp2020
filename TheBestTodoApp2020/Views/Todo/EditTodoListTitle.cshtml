@@ -1,23 +1,44 @@
 ﻿@model TheBestTodoApp2020.Models.EditTodoListTitleViewModel
 
 @{
-    ViewData["Title"] = "Edit Title";
+    ViewData["Title"] = "Edit Title And Category";
 }
 
-<h1>Edit Title</h1>
+<h1>Edit Title And Category</h1>
 
-<h4>@ViewData["TodoListTitle"]</h4>
+<h4>@ViewData["TodoListTitle"] <partial style="font-size: 22px; color: maroon;"> [ @Model.CategoryName ] </partial></h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="EditTodoListTitle">
             <input type="hidden" asp-for="TodoListId" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <label asp-for="CategoryName" class="control-label">Category</label>
+                <select asp-for="CategoryName" class="form-control">
+                    <option value="">-none-</option>
+                    @foreach (var item in Model.AllCategories)
+                    {
+                        @if (item.Name == ViewData["SelectedCategory"])
+                        {
+                            <option selected="selected" value=@item.Name>@item.Name</option>
+                        }
+                        else
+                        {
+                            <option value=@item.Name>@item.Name</option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="CategoryName" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-success" />
             </div>
@@ -26,6 +47,6 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back To List</a>
+    <a asp-action="EditTodoList" asp-route-todoListId=@ViewData["TodoListId"]>Back To List</a>
 </div>
 

@@ -13,13 +13,14 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Login">
+            <input type="hidden" asp-for="ReturnUrl" />
             <label asp-for="UserName" class="control-label">Enter user name: </label>
             <input asp-for="UserName" class="form-control" />
             <span asp-validation-for="UserName" class="text-danger"></span>
             <br />
-            <label asp-for="Password" class="control-label">Enter password: </label>
-            <input type="password" asp-for="Password" class="form-control" />
-            <span asp-validation-for="Password" class="text-danger"></span>
+            <label asp-for="P" class="control-label">Enter password: </label>
+            <input type="password" asp-for="P" class="form-control" />
+            <span asp-validation-for="P" class="text-danger"></span>
             <br />
             <input type="submit" class="btn btn-success" value="Login" />
         </form>

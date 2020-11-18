@@ -22,8 +22,11 @@ namespace Library
         private IMongoCollection<User> _users;
         private const string _USERS = "users";
 
-        private IMongoCollection<Student> _students;
-        private const string _STUDENTS = "students";
+        // private IMongoCollection<Student> _students;
+        // private const string _STUDENTS = "students";
+
+        private IMongoCollection<Category> _categories;
+        private const string _CATEGORIES = "categories";
 
         public DB()
         {
@@ -41,7 +44,21 @@ namespace Library
 
             _users = _db.GetCollection<User>(_USERS);
 
-            _students = _db.GetCollection<Student>(_STUDENTS);
+            // _students = _db.GetCollection<Student>(_STUDENTS);
+
+            _categories = _db.GetCollection<Category>(_CATEGORIES);
+        }
+
+        public bool ExistCategoryName(string categoryName)
+        {
+            if (_categories.Find(c => c.Name == categoryName).FirstOrDefault() == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         public List<TodoList> GetAllTodoListsForUser(User user)
@@ -49,6 +66,11 @@ namespace Library
             var todoListsForUser = _todoLists.Find(t => t.UserId == user.Id).ToList();
 
             return todoListsForUser;
+        }
+
+        public void CreateCategory(Category category)
+        {
+            _categories.InsertOne(category);
         }
 
         //public List<Todo> GetTodosForTodoList(TodoList todoList)
@@ -76,10 +98,17 @@ namespace Library
                 Set(t => t.AllDone, todoList.AllDone).
                 Set(t => t.Title, todoList.Title).
                 Set(t => t.ToBeDone, todoList.ToBeDone).
+                Set(t => t.Category, todoList.Category).
                 //Set(t => t.Todos, todoList.Todos).
                 Set(t => t.UserId, todoList.UserId);
 
             _todoLists.UpdateOne(t => t.Id == todoList.Id, update);
+        }
+
+        public Category GetCategoryByName(string categoryName)
+        {
+            return _categories.Find(c => c.Name == categoryName).FirstOrDefault();
+            
         }
 
         public List<Todo> GetAllTodosForTodoList(ObjectId todoListId)
@@ -93,6 +122,13 @@ namespace Library
         {
             user.IsLoggedIn = false;
             _users.InsertOne(user);
+        }
+
+        public List<Category> GetAllCategoriesByUser(User user)
+        {
+            var categoriesForUser = _categories.Find(c => c.UserId == user.Id).ToList();
+
+            return categoriesForUser;
         }
 
         public void AddTodoList(TodoList todoList, string userName)
