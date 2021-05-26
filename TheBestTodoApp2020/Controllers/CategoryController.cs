@@ -54,7 +54,7 @@ namespace TheBestTodoApp2020.Controllers
 
                 if (db.ExistCategoryName(m.CategoryName))
                 {
-                    ViewData["category"] = m.CategoryName;
+                    ViewData["Category"] = m.CategoryName;
                     return View("CategoryAlreadyExists");
                 }
 

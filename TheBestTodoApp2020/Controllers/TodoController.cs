@@ -223,7 +223,7 @@ namespace TheBestTodoApp2020.Controllers
 
             ViewData["TodoListId"] = todoList.Id.ToString();
             ViewData["TodoListTitle"] = todoList.Title.ToString();
-            if (todoList.Category != null) ViewData["Category"] = " [ " + todoList.Category.Name + " ]";
+            if (todoList.Category != null) ViewData["Category"] = "[ " + todoList.Category.Name + " ]";
             else ViewData["Category"] = "";
 
             List<Todo> listOfTodos = db.GetAllTodosForTodoList(id);

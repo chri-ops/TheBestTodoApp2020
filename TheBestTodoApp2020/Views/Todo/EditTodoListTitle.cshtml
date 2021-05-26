@@ -6,7 +6,16 @@
 
 <h1>Edit Title And Category</h1>
 
-<h4>@ViewData["TodoListTitle"] <partial style="font-size: 22px; color: maroon;"> [ @Model.CategoryName ] </partial></h4>
+@if (!String.IsNullOrEmpty(Model.CategoryName))
+{
+    <h4>@ViewData["TodoListTitle"]</h4>
+    <h6 style="color: maroon;">[ @Model.CategoryName ]</h6>
+}
+else
+{
+    <h4>@ViewData["TodoListTitle"]</h4>
+}
+
 <hr />
 <div class="row">
     <div class="col-md-4">

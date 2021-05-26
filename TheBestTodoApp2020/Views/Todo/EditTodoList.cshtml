@@ -1,17 +1,21 @@
 ﻿@model IEnumerable<Library.Models.Todo>
+@using Library.Models;
 
 @{
     ViewData["Title"] = "Edit Todo List";
 }
 
-<h1>@ViewData["TodoListTitle"]<partial style="font-size: 28px; color: maroon">@ViewData["Category"]</partial></h1>
+<h1>@ViewData["TodoListTitle"]</h1>
+<h4 style="color: maroon;">@ViewData["Category"]</h4>
 <a asp-controller="Todo" asp-action="EditTodoListTitle" asp-route-todoListId=@ViewData["TodoListId"]><span style="margin-right: 10px;" class="glyphicon glyphicon-pencil"></span>Edit Title And Category</a>
 <br />
 <br />
 
-<p>
-    <a class="btn btn-success" asp-action="CreateTodo" asp-route-todoListId=@ViewData["TodoListId"].ToString()>Create A New Todo...</a>
-</p>
+<div>
+    <a style="float: left; margin-right: 15px;" class="btn btn-secondary" asp-action="Index" asp-controller="Todo">◀ Return</a>
+    <a class="btn btn-success" asp-action="CreateTodo" asp-route-todoListId=@ViewData["TodoListId"].ToString()>Create A New Todo ✨</a>
+</div>
+
 
 <table class="table">
     <thead>
@@ -25,7 +29,7 @@
             </th>
             <!--<th>
                 Done?-->
-                @*@Html.DisplayNameFor(model => model.Done)*@
+            @*@Html.DisplayNameFor(model => model.Done)*@
             <!--</th>-->
             <th>
                 @Html.DisplayNameFor(model => model.Comment)
@@ -36,36 +40,41 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @if (item.Done)
-                {
-                    <a class="btn-sm btn-dark" style="color: white" asp-action="CheckTodo" asp-route-todoId=@item.Id.ToString()><b>X</b></a>
-                }
-                else
-                {
-                    <a class="btn-sm btn-dark" style="color: black" asp-action="CheckTodo" asp-route-todoId=@item.Id.ToString()><b><span style="opacity: 0">X</span></b></a>
-                }
-            </td>
-            <td>
-                <a asp-action="EditTodo" asp-route-todoId=@item.Id.ToString()>@item.Description</a>
-            </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.Done)
-            </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.Comment)
-            </td>
-            <td>
-                @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
-                <a class="btn btn-danger" asp-action="DeleteTodo" asp-route-todoId=@item.Id.ToString() asp-route-todoListId=@ViewData["TodoListId"].ToString()>Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (item.Done)
+                    {
+                        <a class="btn-sm btn-dark" style="color: white" asp-action="CheckTodo" asp-route-todoId=@item.Id.ToString()><b>X</b></a>
+                    }
+                    else
+                    {
+                        <a class="btn-sm btn-dark" style="color: black" asp-action="CheckTodo" asp-route-todoId=@item.Id.ToString()><b><span style="opacity: 0">X</span></b></a>
+                    }
+                </td>
+                <td>
+                    <a asp-action="EditTodo" asp-route-todoId=@item.Id.ToString()>@item.Description</a>
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.Done)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comment)
+                </td>
+                <td>
+                    @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
+                    <a class="btn btn-danger" asp-action="DeleteTodo" asp-route-todoId=@item.Id.ToString() asp-route-todoListId=@ViewData["TodoListId"].ToString()>Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 
-<a asp-action="Index" asp-controller="Todo">Return To My Todo Lists</a>
+@if (Model.Count() > 4)
+{
+<a style="float: left; margin-right: 15px;" class="btn btn-secondary" asp-action="Index" asp-controller="Todo">◀ Return</a>
+<a class="btn btn-success" asp-action="CreateTodo" asp-route-todoListId=@ViewData["TodoListId"].ToString()>Create A New Todo ✨</a>
+}
